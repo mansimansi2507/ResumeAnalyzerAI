@@ -1,0 +1,15 @@
+# Visual Studio files
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.vscode/
+
+# OS files
+Thumbs.db
+*.DS_Store
+
+# Secret/API keys
+appsettings.json
+appsettings.Development.json
