@@ -4,8 +4,20 @@ using Microsoft.EntityFrameworkCore.SqlServer; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // Railway PostgreSQL connection
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(databaseUrl));
+}
+else
+{
+    // Local SQL Server connection
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 builder.Services.AddTransient<ResumeAnalyzerAI.Services.OpenAIService>();
 var app = builder.Build();
 app.UseStaticFiles();
