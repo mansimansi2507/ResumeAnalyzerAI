@@ -12,7 +12,19 @@ namespace ResumeAnalyzerAI.Services
 
         public OpenAIService(IConfiguration config)
         {
-            var apiKey = config["OpenAI:ApiKey"];
+            //for local
+            /*var apiKey = config["OpenAI:ApiKey"];
+            _client = new OpenAIClient(apiKey);*/
+
+            //for hosting
+            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+                 ?? config["OpenAI:ApiKey"]; // fallback to appsettings.json for local dev
+
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                throw new Exception("OpenAI API key is not set!");
+            }
+
             _client = new OpenAIClient(apiKey);
         }
 
