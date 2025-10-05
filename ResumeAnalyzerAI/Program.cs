@@ -9,8 +9,22 @@ var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 if (!string.IsNullOrEmpty(databaseUrl))
 {
     // Railway PostgreSQL connection
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+
+    var npgsqlBuilder = new Npgsql.NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port,
+        Username = userInfo[0],
+        Password = userInfo[1],
+        Database = uri.AbsolutePath.TrimStart('/'),
+        SslMode = Npgsql.SslMode.Require,
+        TrustServerCertificate = true
+    };
+
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(databaseUrl));
+        options.UseNpgsql(npgsqlBuilder.ConnectionString));
 }
 else
 {
