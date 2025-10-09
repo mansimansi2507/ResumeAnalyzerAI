@@ -13,6 +13,6 @@ namespace ResumeAnalyzerAI.Models
         public string MissingSkills { get; set; } // Stored as comma-separated or JSON
         public string AISuggestions { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
